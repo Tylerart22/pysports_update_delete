@@ -1,22 +1,21 @@
-import mysql.connector
-from mysql.connector import errorcode
+insert_query = ("INSERT INTO player (first_name, last_name, team_id) "
+                "VALUES (%s, %s, %s)")
 
-config = {
-  "user": "username",
-  "password": "password",
-  "host": "localhost",
-  "database": "pysports",
-  "raise_on_warnings": True
-}
+player_data = ("Gandalf", "The Grey", 1)
+cursor.execute(insert_query, player_data)
+db.commit()
 
-try:
-  db = mysql.connector.connect(**config)
-except mysql.connector.Error as err:
-  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-    print("The supplied username or password are invalid")
-  elif err.errno == errorcode.ER_BAD_DB_ERROR:
-    print("The specified database does not exist")
-  else:
-    print(err)
-else:
-  cursor = db.cursor()
+select_query = ("SELECT player_id, first_name, last_name, team_name "
+                "FROM player "
+                "INNER JOIN team ON player.team_id = team.team_id")
+
+cursor.execute(select_query)
+
+players = cursor.fetchall()
+
+for player in players:
+  print(f"Player ID: {player[0]} - Name: {player[1]} {player[2]} - Team: {player[3]}")
+  update_query = "UPDATE player SET first_name = %s WHERE first_name = 'johnson' AND last_name = 'johnson'"
+new_name = ("j2",)
+cursor.execute(update_query, new_name)
+db.commit()
